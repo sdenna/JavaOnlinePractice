@@ -2573,9 +2573,9 @@ const ERROR_PROBLEMS = [
   },
   { unit:'unit4', difficulty:'hard', topic:'2D Array Traversal',
     code:`int[][] grid = {{1,2},{3,4},{5,6}};\nfor (int i = 0; i < grid.length; i++) {\n    for (int j = 0; j < grid.length; j++) {\n        System.out.print(grid[i][j] + " ");\n    }\n}`,
-    errorDesc:'Inner loop uses grid.length (number of rows = 3) instead of grid[i].length (number of columns = 2). This causes ArrayIndexOutOfBoundsException.',
-    fix:`for (int j = 0; j < grid[i].length; j++) {`,
-    concept:'Inner 2D loop should use grid[i].length for column count, not grid.length'
+    errorDesc:'Inner loop uses grid.length (number of rows = 3) instead of grid[i].length or grid[0].length (number of columns = 2). This causes ArrayIndexOutOfBoundsException.',
+    fix:`for (int j = 0; j < grid[i].length; j++) { // or grid[0].length`,
+    concept:'Inner 2D loop column bound: use grid[i].length or grid[0].length — both work for rectangular arrays'
   },
   { unit:'unit4', difficulty:'hard', topic:'Selection Sort Off-by-One',
     code:`int[] arr = {5, 3, 1, 4};\nfor (int i = 0; i < arr.length; i++) {\n    int minIdx = i;\n    for (int j = i; j < arr.length; j++) {\n        if (arr[j] < arr[minIdx]) minIdx = j;\n    }\n    // swap\n    int tmp = arr[i];\n    arr[i] = arr[i];  // bug here\n    arr[minIdx] = tmp;\n}`,
@@ -2698,9 +2698,9 @@ const ERROR_PROBLEMS = [
   },
   { unit:'unit4', difficulty:'hard', topic:'2D Array Traversal',
     code:`int[][] grid = {{1,2},{3,4},{5,6}};\nfor (int i=0; i<grid.length; i++)\n    for (int j=0; j<grid.length; j++)\n        System.out.print(grid[i][j]+" ");`,
-    errorDesc:'Inner loop uses grid.length (rows=3) instead of grid[i].length (cols=2). Causes ArrayIndexOutOfBoundsException.',
-    fix:`for (int j = 0; j < grid[i].length; j++)`,
-    concept:'Inner loop of 2D traversal must use grid[i].length for columns, not grid.length'
+    errorDesc:'Inner loop uses grid.length (rows=3) instead of grid[i].length or grid[0].length (cols=2). Causes ArrayIndexOutOfBoundsException.',
+    fix:`for (int j = 0; j < grid[i].length; j++) // or grid[0].length`,
+    concept:'Inner loop column bound: grid[i].length and grid[0].length are both correct for rectangular 2D arrays'
   },
 ];
 
@@ -3008,8 +3008,8 @@ const CODE_PROBLEMS = [
       {input:'{{1,2,3},{4,5,6}}', expected:'{6,15}'},
       {input:'{{10,20}}', expected:'{30}'},
     ],
-    solution:'int[] sums = new int[grid.length];\nfor (int i = 0; i < grid.length; i++)\n    for (int j = 0; j < grid[i].length; j++)\n        sums[i] += grid[i][j];\nreturn sums;',
-    concept:'2D array traversal; grid.length = rows; grid[i].length = columns'
+    solution:'int[] sums = new int[grid.length];\nfor (int i = 0; i < grid.length; i++)\n    for (int j = 0; j < grid[0].length; j++)\n        sums[i] += grid[i][j];\nreturn sums;',
+    concept:'2D array traversal: grid.length = rows; grid[0].length or grid[i].length = columns'
   },
   { unit:'unit4', difficulty:'hard', topic:'ArrayList',
     prompt:'Write a method called removeDuplicates that takes an ArrayList<Integer> and returns a new ArrayList<Integer> with duplicates removed, keeping only the first occurrence. Use only get(), size(), and add().',
@@ -3951,6 +3951,7 @@ GRADING RULES:
 - Award FULL credit if the code correctly solves the problem, even if it differs from the expected solution. There are many valid ways to write correct Java.
 - Award FULL credit for functionally correct code even with minor style differences. For-each loops, indexed for loops, and while loops are ALL equally valid.
 - Award FULL credit for any logically correct approach using AP Java subset methods: get(), size(), add(), remove() for ArrayList, or for-each loops. Do NOT require get()/size() if the student used a for-each loop correctly.
+- For 2D array traversal: ALWAYS accept arr[0].length (or grid[0].length, matrix[0].length, etc.) for the inner loop bound. All 2D arrays in this course are rectangular (not jagged), so arr[0].length is equivalent to arr[i].length and is fully correct. Do NOT mark this as an error.
 - Award PARTIAL credit if the logic is mostly right but has a small bug or edge case issue.
 - Award INCORRECT only if the code has a compile error, the core logic is wrong, or the code would not solve the problem.
 - If INCORRECT: identify the SPECIFIC problem in the student's code (e.g. "variable name conflict", "wrong loop bounds", "missing return"), not a vague description.
